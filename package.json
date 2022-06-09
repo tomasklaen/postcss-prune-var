@@ -1,0 +1,33 @@
+{
+	"name": "postcss-prune-var",
+	"version": "1.0.0",
+	"description": "PostCSS plugin to remove unused variables",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"git-push": "git push",
+		"npm-publish": "npm publish",
+		"postversion": "npm-run-all git-push npm-publish"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/tomasklaen/postcss-prune-var.git"
+	},
+	"keywords": [
+		"postcss",
+		"postcss-plugin",
+		"unused",
+		"prune",
+		"var",
+		"variable"
+	],
+	"author": "tomasklaen",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/tomasklaen/postcss-prune-var/issues"
+	},
+	"homepage": "https://github.com/tomasklaen/postcss-prune-var#readme",
+	"devDependencies": {
+		"npm-run-all": "^4.1.5"
+	}
+}
