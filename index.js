@@ -47,8 +47,8 @@ module.exports = () => {
 
 				if (!decl.value.includes('var(')) return;
 
-				for (const match of decl.value.matchAll(/var\((?<name> *--[^ ,\)]+)\)/g)) {
-					const variable = match.groups.name;
+				for (const match of decl.value.matchAll(/var\(\s*(?<name>--[^ ,\);]+)/g)) {
+					const variable = match.groups.name.trim();
 					if (isVar) {
 						registerDependency(decl.prop, variable);
 					} else {
