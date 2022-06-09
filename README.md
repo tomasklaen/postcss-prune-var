@@ -9,10 +9,10 @@ This is unsafe if there is a possibility of a second CSS file accessing variable
 #### How does it work, and how is it different from postcss-unused-var?
 
 -   `postcss-unused-var` is outdated, deprecated, and didn't work right.
--   Removes variables from everywhere, including `:root`.
 -   Treats all variables as global, because they are.
--   Checks and prevents removal of variables used only by other variables by following variable dependency graph.
--   At the same time, if a variable is only used by other variables, it will be removed along with those that depend on it.
+-   Removes variables from everywhere, including `:root`.
+-   Checks and prevents removal of variables only used by other variables that are accessed with `var()` by following variable dependency graph.
+-   At the same time, if a variable is only used by other unused variables, it will also be removed.
 -   Way faster.
 
 ## Install
