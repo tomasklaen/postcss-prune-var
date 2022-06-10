@@ -9,6 +9,8 @@ async function test() {
 	--root-unused-proxy: var(--root-unused);
 	--root-used: blue;
 	--unused-duplicate: yellow;
+	--circular: var(--circular);
+	color: var(--circular);
 }
 .foo {
 	--unused: red;
@@ -24,6 +26,8 @@ async function test() {
 	const output = `
 :root {
 	--root-used: blue;
+	--circular: var(--circular);
+	color: var(--circular);
 }
 .foo {
 	--proxied: pink;

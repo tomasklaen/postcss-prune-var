@@ -22,11 +22,14 @@ module.exports = () => {
 				return record;
 			};
 
-			/** @type {(variable: string) => void} */
-			const registerUse = (variable) => {
+			/** @type {(variable: string, ignoreList?: Set<any>) => void} */
+			const registerUse = (variable, ignoreList = new Set()) => {
 				const record = getRecord(variable);
 				record.uses++;
-				for (const dependency of record.dependencies) registerUse(dependency);
+				ignoreList.add(variable);
+				for (const dependency of record.dependencies) {
+					if (!ignoreList.has(dependency)) registerUse(dependency, ignoreList);
+				}
 			};
 
 			/** @type {(variable: string, dependency: string) => void} */
