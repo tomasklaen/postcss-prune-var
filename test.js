@@ -8,6 +8,7 @@ async function test() {
 	--root-unused: red;
 	--root-unused-proxy: var(--root-unused);
 	--root-used: blue;
+	--unused-duplicate: yellow;
 }
 .foo {
 	--unused: red;
@@ -15,6 +16,7 @@ async function test() {
 	--proxied: pink;
 	--proxy: var(--proxied);
 	--used: green;
+	--unused-duplicate: yellow;
 	color: var(--root-used);
 	background: linear-gradient(to bottom, var(--used), var(--proxy));
 }

@@ -1,7 +1,7 @@
 /**
  * @typedef {object} UseRecord
  * @property {number} uses
- * @property {any} [declaration]
+ * @property {Set<any>} declarations
  * @property {Set<string>} dependencies
  */
 
@@ -16,7 +16,7 @@ module.exports = () => {
 			const getRecord = (variable) => {
 				let record = records.get(variable);
 				if (!record) {
-					record = {uses: 0, dependencies: new Set()};
+					record = {uses: 0, dependencies: new Set(), declarations: new Set()};
 					records.set(variable, record);
 				}
 				return record;
@@ -40,10 +40,7 @@ module.exports = () => {
 				const isVar = decl.prop.startsWith('--');
 
 				// Initiate record
-				if (isVar) {
-					const record = getRecord(decl.prop);
-					record.declaration = decl;
-				}
+				if (isVar) getRecord(decl.prop).declarations.add(decl);
 
 				if (!decl.value.includes('var(')) return;
 
@@ -58,8 +55,10 @@ module.exports = () => {
 			});
 
 			// Remove unused variables
-			for (const {uses, declaration} of records.values()) {
-				if (uses === 0) declaration?.remove();
+			for (const {uses, declarations} of records.values()) {
+				if (uses === 0) {
+					for (let decl of declarations) decl.remove();
+				}
 			}
 		},
 	};
