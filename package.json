@@ -1,6 +1,6 @@
 {
 	"name": "postcss-prune-var",
-	"version": "1.0.4",
+	"version": "1.0.5",
 	"description": "PostCSS plugin to remove unused variables",
 	"main": "index.js",
 	"scripts": {
