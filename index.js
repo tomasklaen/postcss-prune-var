@@ -7,11 +7,11 @@ const path = require("path");
  * @property {Set<string>} dependencies
  */
 
-module.exports = (options) => {
+module.exports = (options = {}) => {
 	return {
 		postcssPlugin: 'postcss-prune-var',
 		Once(root) {
-			const { skip = [] } = options;
+			const {skip = []} = options;
 			if (skip.some((s) => minimatch(path.relative(process.cwd(), root.source.input.from), s, {dot: true}))) {
 				return;
 			}
