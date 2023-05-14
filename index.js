@@ -1,3 +1,5 @@
+const {minimatch} = require("minimatch");
+const path = require("path");
 /**
  * @typedef {object} UseRecord
  * @property {number} uses
@@ -5,10 +7,14 @@
  * @property {Set<string>} dependencies
  */
 
-module.exports = () => {
+module.exports = (options = {}) => {
 	return {
 		postcssPlugin: 'postcss-prune-var',
 		Once(root) {
+			const {skip = []} = options;
+			if (skip.some((s) => minimatch(path.relative(process.cwd(), root.source.input.from), s, {dot: true}))) {
+				return;
+			}
 			/** @type Map<string, UseRecord> */
 			const records = new Map();
 

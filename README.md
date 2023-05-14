@@ -31,6 +31,19 @@ const yourConfig = {
 };
 ```
 
+## Options
+
+### skip
+
+Use this option to exclude certain files or folders that would otherwise be scanned.
+
+```js
+const pruneVar = require('postcss-prune-var');
+
+const yourConfig = {
+	plugins: [pruneVar({skip: ['node_modules/**']})],
+};
+```
 ## Example
 
 Input:
