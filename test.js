@@ -2,7 +2,10 @@ const assert = require('assert');
 const postcss = require('postcss').default;
 const pruneVar = require('./');
 
-async function test() {
+const tests = [];
+const test = (name, fn) => (fn.displayName = name) && tests.push(fn);
+
+test('base', async () => {
 	const input = `
 :root {
 	--root-unused: red;
@@ -38,11 +41,33 @@ async function test() {
 }
 `;
 	const result = await postcss([pruneVar()]).process(input, {from: 'test.css', to: 'out.css'});
-
 	assert.equal(result.css, output, `Result different than expected`);
+});
+
+test('duplicate var definitions', async () => {
+	const input = `
+:root {
+	--color-state-bg-striped: green;
 }
 
-async function testFileFiltering() {
+.example {
+	--color-component-bg: red;
+	--color-state-bg: var(--color-component-bg);
+
+	.cell {
+		background-color: var(--color-state-bg);
+	}
+
+	.child > .row:nth-of-type(odd) > * {
+		--color-state-bg: var(--color-state-bg-striped);
+	}
+}
+`;
+	const result = await postcss([pruneVar()]).process(input, {from: 'test.css', to: 'out.css'});
+	assert.equal(result.css, input, `Result different than expected`);
+});
+
+test('file filtering', async () => {
 	const output = `
 :root {
 	--root-unused: red;
@@ -64,10 +89,21 @@ async function testFileFiltering() {
 }
 `;
 
-	const result = await postcss([pruneVar({skip: ['fixtures/**']})]).process(output, {from: 'fixtures/test.css', to: 'out.css'});
+	const result = await postcss([pruneVar({skip: ['fixtures/**']})]).process(output, {
+		from: 'fixtures/test.css',
+		to: 'out.css',
+	});
 	assert.strictEqual(result.css, output, `Result different than expected`);
-	
-}
+});
 
-test();
-testFileFiltering();
+(async function () {
+	for (const test of tests) {
+		try {
+			await test();
+			console.log(`✔ ${test.displayName}`);
+		} catch (error) {
+			console.log(`❌ ${test.displayName}`);
+			console.error(error);
+		}
+	}
+})();

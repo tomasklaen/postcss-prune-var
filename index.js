@@ -1,5 +1,6 @@
 const {minimatch} = require("minimatch");
 const path = require("path");
+
 /**
  * @typedef {object} UseRecord
  * @property {number} uses
@@ -17,6 +18,8 @@ module.exports = (options = {}) => {
 			}
 			/** @type Map<string, UseRecord> */
 			const records = new Map();
+			/** @type Set<string> */
+			const usedVars = new Set();
 
 			/** @type {(variable: string) => UseRecord} */
 			const getRecord = (variable) => {
@@ -58,10 +61,16 @@ module.exports = (options = {}) => {
 					if (isVar) {
 						registerDependency(decl.prop, variable);
 					} else {
-						registerUse(variable);
+						usedVars.add(variable);
 					}
 				}
 			});
+
+			// We register variable uses only after all variables have been entered into the graph,
+			// otherwise we remove variables that were defined in CSS file after some property used them.
+			for (const variable of usedVars) {
+				registerUse(variable);
+			}
 
 			// Remove unused variables
 			for (const {uses, declarations} of records.values()) {
